@@ -18,16 +18,37 @@
 import numpy as np
 
 if __name__ == "__main__":
-    matrix=[]
-    row=int(input())
-    col=int(input())
-    for i in range(row):
-        list1=[]
-        for j in range(col):
-            a=int(input())
-            if a==0 or a==1 :
-                list1.append(a)
-        matrix.append(list1)
-    matrix=np.array(matrix)
+    # row=int(input())
+    # col=int(input())
+    # for i in range(row):
+    #     list1=[]
+    #     for j in range(col):
+    #         a=int(input())
+    #         # if a==0 or a==1 :
+    #         list1.append(a)
+    #     matrix.append(list1)
+    # matrix=np.array(matrix)
+    # # print(matrix)
+    n=int(input(f"Nhap N: "))
+    matrix=np.zeros([n,n], dtype=int)
+    for i in range(n**2):   #full ma trận 2 chiềuchiều
+        a=input(f"Nhap A tu 0 den {n-1}: ")
+        b=input(f"Nhap B tu 0 den {n-1}: ")
+        try:
+            if not a or not b:  #Kiểm tra giá trị có rỗng
+                break
+            
+            a=int(a)
+            b=int(b)
+            if (0<=a<n) and (0<=b<n):
+                matrix[a,b]=1
+            else: 
+                print(a, b,"Khong hop le")
+                
+        except ValueError:
+            print(ValueError)
+    # # print(matrix)
+    # x1=int(input())
+    # x2=int(input())
     print(matrix)
     
