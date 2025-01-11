@@ -15,3 +15,19 @@
 # 2 0 0 0 0 0 
 # 3 0 0 0 0 0 
 # 4 0 0 0 0 0 
+import numpy as np
+
+if __name__ == "__main__":
+    matrix=[]
+    row=int(input())
+    col=int(input())
+    for i in range(row):
+        list1=[]
+        for j in range(col):
+            a=int(input())
+            if a==0 or a==1 :
+                list1.append(a)
+        matrix.append(list1)
+    matrix=np.array(matrix)
+    print(matrix)
+    
