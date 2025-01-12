@@ -15,40 +15,79 @@
 # 2 0 0 0 0 0 
 # 3 0 0 0 0 0 
 # 4 0 0 0 0 0 
-import numpy as np
+# import numpy as np
+# from collections import deque
 
-if __name__ == "__main__":
-    # row=int(input())
-    # col=int(input())
-    # for i in range(row):
-    #     list1=[]
-    #     for j in range(col):
-    #         a=int(input())
-    #         # if a==0 or a==1 :
-    #         list1.append(a)
-    #     matrix.append(list1)
-    # matrix=np.array(matrix)
-    # # print(matrix)
-    n=int(input(f"Nhap N: "))
-    matrix=np.zeros([n,n], dtype=int)
-    for i in range(n**2):   #full ma trận 2 chiềuchiều
-        a=input(f"Nhap A tu 0 den {n-1}: ")
-        b=input(f"Nhap B tu 0 den {n-1}: ")
-        try:
-            if not a or not b:  #Kiểm tra giá trị có rỗng
-                break
+# def Nhap(n:int ):
+#     max=np.iinfo(np.int32).max
+#     matrix=np.full((n,n), max, dtype=np.int32)
+#     for i in range(n**2):   #full ma trận 2 chiềuchiều
+#         a=input(f"{i+1}. Nhap A tu 0 den {n-1}: ")
+#         b=input(f"{i+1}. Nhap B tu 0 den {n-1}: ")
+#         try:
+#             if not a or not b:  #Kiểm tra giá trị có rỗng
+#                 break
             
-            a=int(a)
-            b=int(b)
-            if (0<=a<n) and (0<=b<n):
-                matrix[a,b]=1
-            else: 
-                print(a, b,"Khong hop le")
+#             a=int(a)
+#             b=int(b)
+#             if (0<=a<n) and (0<=b<n):
+#                 matrix[a,b]=1
+#             else: 
+#                 print(a, b,"Khong hop le")
                 
-        except ValueError:
-            print(ValueError)
-    # # print(matrix)
-    # x1=int(input())
-    # x2=int(input())
-    print(matrix)
+#         except ValueError:
+#             print(ValueError)
+
+#     # print(matrix)
+#     return matrix
     
+# def BFS(matrix:np.ndarray, n:int):
+#     queue=deque()
+#     x=int(input())
+#     queue.appendleft(x)
+#     while(not queue):
+#         i=queue.pop()
+#         for j in range (n):
+#             if matrix[i,j]==1:
+#                 queue.appendleft(j)
+        
+    
+    
+
+# if __name__ == "__main__":
+#     # row=int(input())
+#     # col=int(input())
+#     # for i in range(row):
+#     #     list1=[]
+#     #     for j in range(col):
+#     #         a=int(input())
+#     #         # if a==0 or a==1 :
+#     #         list1.append(a)
+#     #     matrix.append(list1)
+#     # matrix=np.array(matrix)
+#     # # print(matrix)
+#     n=int(input(f"Nhap N: "))
+#     matrix=Nhap(n)
+#     print(matrix)
+
+
+#https://www.youtube.com/watch?v=7XVTnCrWDPY
+import queue
+import networkx as nx
+import matplotlib.pyplot as plt
+
+def order_bfs(graph, start_node):
+    visited=set()                   #Đã thăm
+    q=queue.Queue()                 #Hàng đợi
+    q.put(start_node)               #Đưa node vào hàng đợi
+    order=[]                        #Chưa biết có tác dụng gì?
+    
+    while not q.empty():            #Nếu hàng đợi trống
+        vertex=q.get()              #Đỉnh
+        if vertex not in visited:   #Nếu lần đầu đến
+            order.append(vertex)    #Chưa biết có tác dụng gì?
+            visited.add(vertex)     #Thêm đã thăm
+            for node in graph[vertex]:  # Lấy dữ liệu graph, graph[vertex] là gì thì chưa biết
+                if node not in visited:
+                    q.put(node)
+    return order
