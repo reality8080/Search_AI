@@ -75,7 +75,7 @@
 import queue
 import networkx as nx
 import matplotlib.pyplot as plt
-import time
+from Draw import visualize_search
 
 def order_bfs(graph, start_node):
     visited=set()                               #Tập hợp các đỉnh Đã thăm(Khong phải thứ tự thăm, tránh taoh vòng lặp)
@@ -92,17 +92,6 @@ def order_bfs(graph, start_node):
                 if node not in visited:         #Nếu đỉnh liền kề chưa được thăm
                     q.put(node)                 #Đỉnh liền kề đó sẽ được đưa vào hàng đợi
     return order                                #Trả về danh sách thứ tự
-def visualize_search(order,title,G,pos):
-    plt.figure()
-    plt.title(title)
-    for i, node in enumerate(order,start=1):
-        plt.clf()
-        plt.title(title)
-        nx.draw(G,pos,with_labels=True, node_color=['r' if n == node else 'g' for n in G.nodes])
-        plt.draw()
-        plt.pause(1)
-    plt.show()
-    time.sleep(1)
 
 if __name__ =='__main__':
     G=nx.Graph()
