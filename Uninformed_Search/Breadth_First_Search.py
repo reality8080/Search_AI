@@ -75,19 +75,47 @@
 import queue
 import networkx as nx
 import matplotlib.pyplot as plt
+import time
 
 def order_bfs(graph, start_node):
-    visited=set()                   #Đã thăm
-    q=queue.Queue()                 #Hàng đợi
-    q.put(start_node)               #Đưa node vào hàng đợi
-    order=[]                        #Chưa biết có tác dụng gì?
+    visited=set()                               #Tập hợp các đỉnh Đã thăm(Khong phải thứ tự thăm, tránh taoh vòng lặp)
+    q=queue.Queue()                             #Hàng đợi
+    q.put(start_node)                           #Đưa node vào hàng đợi
+    order=[]                                    #Danh sách thứ tự thăm các đỉnh, có chức năng gần giống visited nhưng không phải set
     
-    while not q.empty():            #Nếu hàng đợi trống
-        vertex=q.get()              #Đỉnh
-        if vertex not in visited:   #Nếu lần đầu đến
-            order.append(vertex)    #Chưa biết có tác dụng gì?
-            visited.add(vertex)     #Thêm đã thăm
-            for node in graph[vertex]:  # Lấy dữ liệu graph, graph[vertex] là gì thì chưa biết
-                if node not in visited:
-                    q.put(node)
-    return order
+    while not q.empty():                        #Nếu hàng đợi trống
+        vertex=q.get()                          #Lấy đỉnh dầu tiên theo FIFO 
+        if vertex not in visited:               #Nếu lần đầu đến thăm, chưa được thăm
+            order.append(vertex)                #Thêm vào danh sách các đỉnh đã thăm 
+            visited.add(vertex)                 #Thêm đã thăm
+            for node in graph[vertex]:          # Lấy dữ liệu graph, graph[vertex] là các đỉnh liền kề của đỉnh đã chọn
+                if node not in visited:         #Nếu đỉnh liền kề chưa được thăm
+                    q.put(node)                 #Đỉnh liền kề đó sẽ được đưa vào hàng đợi
+    return order                                #Trả về danh sách thứ tự
+def visualize_search(order,title,G,pos):
+    plt.figure()
+    plt.title(title)
+    for i, node in enumerate(order,start=1):
+        plt.clf()
+        plt.title(title)
+        nx.draw(G,pos,with_labels=True, node_color=['r' if n == node else 'g' for n in G.nodes])
+        plt.draw()
+        plt.pause(1)
+    plt.show()
+    time.sleep(1)
+
+if __name__ =='__main__':
+    G=nx.Graph()
+    G.add_edges_from([('1','2'),
+                      ('2','3'),
+                      ('3','4'),
+                      ('4','1'),
+                      ('1','5'),
+                      ('2','6'),
+                      ('3','7'),
+                      ('4','8'),
+                      ('5','6'),
+                      ('6','8'),
+                      ('8','5'),])
+    pos=nx.spring_layout(G)
+    visualize_search(order_bfs(G,start_node='1'),title='BFS Visualization',G=G,pos=pos)
