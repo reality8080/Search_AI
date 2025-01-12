@@ -75,7 +75,7 @@
 import queue
 import networkx as nx
 import matplotlib.pyplot as plt
-from Draw import visualize_search
+import Draw
 
 def order_bfs(graph, start_node):
     visited=set()                               #Tập hợp các đỉnh Đã thăm(Khong phải thứ tự thăm, tránh taoh vòng lặp)
