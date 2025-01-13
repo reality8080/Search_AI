@@ -19,6 +19,7 @@ plt.pie(amount, labels=Label,explode=explodes, autopct="%.3f%%",
     # tròn đến vị trí hiển thị phần trăm (percentage) 
     # của mỗi phần.
 # autopct: viết số % trong pie
+# startangle: là vị trí bắt đầu, =0 thì sẽ bắt đầu bên phải
 #Hiển thị
 # plt.legend()
 plt.grid()
