@@ -15,7 +15,6 @@ G.add_edges_from(edge_list)
 
 # nx.draw_random(G,with_labels=True)
 
-# nx.draw_planar(G,with_labels=True)
+nx.draw_planar(G,with_labels=True)
 
-nx.draw
 plt.show()
