@@ -14,6 +14,5 @@ print(dict(G.in_degree)[1])
 print(dict(G.out_degree)[1])
 #In số vector quanh node, đi ra, DiGraph
 
-# Đường đi ngắn nhất
 nx.draw_spring(G,with_labels=True)
 plt.show()
