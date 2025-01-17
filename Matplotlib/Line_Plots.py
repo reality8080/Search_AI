@@ -14,3 +14,4 @@ plt.legend()
 
 plt.grid()
 plt.show()
+# Đồ thị đường

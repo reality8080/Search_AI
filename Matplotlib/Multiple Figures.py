@@ -11,3 +11,4 @@ plt.figure(2)
 plt.plot(x2,y2)
 
 plt.show()
+# Nhiều đồ thị
