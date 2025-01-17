@@ -17,3 +17,4 @@ axs[1,1].plot(x,np.log(x))
 
 plt.grid()
 plt.show()
+# Phân hình để chứa nhiều đồ thị

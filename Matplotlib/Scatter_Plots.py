@@ -11,3 +11,4 @@ plt.scatter(X_data,Y_data,color='#f0f', s=100, marker="*", alpha=0.5)
 plt.legend()
 plt.grid()
 plt.show()
+#  Đồ thị tập trung

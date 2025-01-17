@@ -24,3 +24,4 @@ ax.view_init(azim=0,elev=90)
 
 plt.grid()
 plt.show()
+# Vẽ 3D

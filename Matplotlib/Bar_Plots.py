@@ -24,4 +24,7 @@ plt.show()
 # Các bộ phận: Bộ phận lấy banh, máy hút, bánh xe, rổ chứa
 # Cảm biến: camera, 
 # 
+# 
+# Vẽ cột dữ liệu
+# 
 # #

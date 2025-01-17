@@ -23,3 +23,4 @@ plt.yticks(income_ticks,[f"{x}k USD" for x in income_ticks])
 # plt.legend()
 plt.grid()
 plt.show()
+# Điều chỉnh đầu vào và hiển thị đầu ra

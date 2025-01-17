@@ -10,3 +10,4 @@ for _ in range(100000):
     
     
 plt.show()
+# Dùng vòng lặp, vừa tăng giá trị, vừa chèn biểu đồ mới, tạo hiện tượng là đang chuyển động

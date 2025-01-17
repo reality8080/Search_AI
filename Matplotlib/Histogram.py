@@ -22,3 +22,4 @@ plt.hist(ages, bins=1000, cumulative=True)
 plt.legend()
 plt.grid()
 plt.show()
+# Vẽ đồ thị dạng cột thống kê tần suất,

@@ -17,3 +17,6 @@ plt.legend(loc='best')
 plt.show()
 
 # Chỉ nạp Y--> X sẽ tạo tự động theo size trong Y(số lượng phần tử của Y - 1 )
+
+# Thêm chú thích.(legend)
+#Thêm nhiều ĐƯỜNG HOẶC KIỂU vào cùng 1 đồ thị

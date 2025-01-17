@@ -19,3 +19,4 @@ plt.grid()
 plt.savefig("exportingPlots.png", 
             dpi=1080,
             transparent=True)
+# Xuất hình ảnh

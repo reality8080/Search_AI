@@ -25,3 +25,4 @@ plt.boxplot(data)
 plt.legend()
 plt.grid()
 plt.show()
+# Vẽ đồ thị dạng nến

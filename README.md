@@ -15,3 +15,5 @@
 
     https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.centrality.eigenvector_centrality.html#networkx.algorithms.centrality.eigenvector_centrality
 
+- Seaborn
+    color: https://seaborn.pydata.org/tutorial/color_palettes.html
