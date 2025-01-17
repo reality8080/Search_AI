@@ -14,7 +14,7 @@ ages=np.random.normal(loc=30,scale=1.5,size=1000)
 # plt.hist(ages, bins=[ages.min(),28,32,ages.max()])
 plt.hist(ages, bins=1000, cumulative=True)
 # Bins là giá trị mà màn hình chia
-# với bins=1000 thì các cột sẽ chia 1000 
+# với bins=1000 thì khoảng cách trong đồ thị sẽ chia 1000,
 # cumulative là giá trị sắp xếp, True thì sắp về phía giá trị lớn nhất
 # #
 
