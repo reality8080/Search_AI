@@ -82,6 +82,7 @@ def order_bfs(graph, start_node):
     q=queue.Queue()                             #Hàng đợi
     q.put(start_node)                           #Đưa node vào hàng đợi
     order=[]                                    #Danh sách thứ tự thăm các đỉnh, có chức năng gần giống visited nhưng không phải set
+    edges = []                                  # Danh sách các cạnh đã duyệt
     
     while not q.empty():                        #Nếu hàng đợi trống
         vertex=q.get()                          #Lấy đỉnh dầu tiên theo FIFO 
@@ -91,4 +92,26 @@ def order_bfs(graph, start_node):
             for node in graph[vertex]:          # Lấy dữ liệu graph, graph[vertex] là các đỉnh liền kề của đỉnh đã chọn
                 if node not in visited:         #Nếu đỉnh liền kề chưa được thăm
                     q.put(node)                 #Đỉnh liền kề đó sẽ được đưa vào hàng đợi
-    return order                                #Trả về danh sách thứ tự
+                    edges.append((vertex, node))# Lưu lại cạnh được duyệt
+                    for v in edges[:len(edges)-1]:
+                        if v[0]!=vertex and v[1]==node:
+                            edges.remove((vertex,node))
+    edges.insert(0,('1','1'))                
+    return order,edges                                #Trả về danh sách thứ tự thăm và danh sách cạnh
+
+if __name__ == "__main__":
+    G=nx.Graph()
+    G.add_edges_from([('1','2'),
+                      ('1','4'),
+                      ('1','8'),
+                      ('2','3'),
+                      ('2','7'),
+                      ('4','3'),
+                      ('4','5'),
+                      ('3','6'),
+                      ('8','7'),
+                      ('8','5'),
+                      ('7','5'),])
+    pos=nx.spring_layout(G)
+    order,edges=order_bfs(G,start_node='1')
+    print(order,edges,sep='\n')
