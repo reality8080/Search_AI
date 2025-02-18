@@ -80,7 +80,7 @@ if __name__=='__main__':
         ('8','7'),('8','5'),('7','5')
     ])
     
-    pos=nx.spring_layout(G)
+    pos=nx.circular_layout(G)
     start_node='1'
     BFS(G,start_node,'BFS',pos)
 
