@@ -96,7 +96,7 @@ def order_bfs(graph, start_node):
                     for v in edges[:len(edges)-1]:
                         if v[0]!=vertex and v[1]==node:
                             edges.remove((vertex,node))
-    edges.insert(0,('1','1'))                
+    edges.insert(0,(f'start_node',f'start_node'))                
     return order,edges                                #Trả về danh sách thứ tự thăm và danh sách cạnh
 
 if __name__ == "__main__":
