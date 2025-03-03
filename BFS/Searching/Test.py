@@ -3,7 +3,7 @@ import queue
 import matplotlib.pyplot as plt
 import time
 
-def visualizing(Graph,edges,step,visited):
+def visualizing(Graph,edges,step,visited, path=[]):
     edges_colors=[]
     for edge in Graph.edges():
         if edge in edges[:step] or (edge[1],edge[0]) in edges[:step]:
@@ -21,6 +21,9 @@ def visualizing(Graph,edges,step,visited):
         else:
             node_colors[edge[0]]='gray'
             node_colors[edge[1]]='gray'
+    for u in path:
+        node_colors[u]='yellow'
+
     node_colors_list=[node_colors[node] for node in Graph.nodes()]
     nx.draw(Graph, pos, with_labels=True,
             node_color=node_colors_list,
@@ -33,31 +36,33 @@ def visualizing(Graph,edges,step,visited):
     plt.pause(1.5)
     
 
-def BFS(Graph,start, title, pos):
+def BFS(Graph,begin, end, title, pos):
     try:
         # Ve do thi
         plt.figure(figsize=(8,6))
         #Du lieu node
         visited=set()
         q=queue.Queue()
-        # orders=[]
+        
         edges=[]
         step=0
         
-        q.put(start)
-        # edges.append((f'{start}',f'{start}'))
+        q.put(begin)
+        # edges.append((f'{begin}',f'{begin}'))
+        found=False
         
         while not q.empty():
             u=q.get()
             if u not in visited:
                 # orders.append(u)
+                if u is end:
+                    found=True
+                    break
                 visited.add(u)
                 step += 1
                 # Tô màu
-                plt.clf()
-                plt.title(title)
                 # Tô màu cạnh
-                
+
                 for v in Graph[u]:
                     if v not in visited:
                         q.put(v)
@@ -65,7 +70,22 @@ def BFS(Graph,start, title, pos):
                         for i in edges[:len(edges)-1]:
                             if(i[0]!=u and i[1]==v):
                                 edges.remove((u,v))
+                plt.clf()
+                plt.title(title)
                 visualizing(Graph,edges,step,visited)
+        if found:
+            path=[end]
+            cur=end
+            while cur !=begin:
+                for u,v in edges:
+                    if v ==cur:
+                        path.append(u)
+                        cur=u
+                        break
+            path.reverse()
+            plt.clf()
+            plt.title(title)
+            visualizing(Graph,edges,step,visited, path)
         plt.legend()
         time.sleep(2)
         plt.show()
@@ -82,5 +102,6 @@ if __name__=='__main__':
     
     pos=nx.circular_layout(G)
     start_node='1'
-    BFS(G,start_node,'BFS',pos)
+    end_node='6'
+    BFS(G,start_node,end_node,'BFS',pos)
 
