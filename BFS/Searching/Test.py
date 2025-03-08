@@ -7,7 +7,7 @@ def visualizing(Graph,edges,step,visited, path=[]):
     edges_colors=[]
     for edge in Graph.edges():
         if edge in edges[:step] or (edge[1],edge[0]) in edges[:step]:
-            edges_colors.append('blue')
+            edges_colors.append('gray')
         else:
             edges_colors.append('black')
                 # Tô node chưa thăm, đã thăm
@@ -102,6 +102,6 @@ if __name__=='__main__':
     
     pos=nx.circular_layout(G)
     start_node='1'
-    end_node='6'
+    end_node='5'
     BFS(G,start_node,end_node,'BFS',pos)
 
