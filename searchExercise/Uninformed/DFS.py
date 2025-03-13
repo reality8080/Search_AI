@@ -1,0 +1,94 @@
+import numpy as np
+# import collections
+import timeit
+# import queue
+from collections import deque
+import heapq
+# import itertools
+
+# counter=itertools.count()
+#BFS dùng manhattan
+
+
+def actionHq(state):
+    # next=[]
+    row,col=np.argwhere(state==0)[0]
+    
+    moves=[
+        (-1,0,),
+        (0,-1,),
+        (1,0,),
+        (0,1,)
+    ]
+
+    for dr,dc in moves:
+        newRow=dr+row
+        newCol=dc+col
+        if (0<=newRow<3) and (0<=newCol<3):
+            newState=state.copy()
+            newState[row,col], newState[newRow,newCol]=newState[newRow,newCol],newState[row,col]
+            # next.append((newState, move))
+            yield newState
+    # return next
+
+def DFS(start,end):
+    stack=deque()
+    visited=set()
+    startTuple=tuple(start.flatten())
+    endTuple=tuple(end.flatten())
+
+    stack.append((startTuple,[startTuple]))
+    while stack:
+        stateTuple, path=stack.pop()
+        if stateTuple==endTuple:
+            return path
+        
+        if stateTuple not in visited:
+            visited.add(stateTuple)
+            for nextState in actionHq(np.array(stateTuple).reshape((3,3))):
+                nextTuple=tuple(nextState.flatten())
+                if nextTuple not in visited:
+                    stack.appendleft((nextTuple,path+[nextTuple]))
+    return None
+
+# def ID(start,end):
+#     cost=0
+#     stack=deque()
+#     visited=set()
+#     startTuple=tuple(start.flatten())
+#     endTuple=tuple(end.flatten())
+
+#     stack.append((0,startTuple,[startTuple]))
+#     while stack:
+#         c,stateTuple, path=stack.pop()
+
+#         if c>cost:
+#             c=0
+#             stack.clear()
+#             stack.append((c,startTuple,[startTuple]))
+#             cost+=1
+#         if stateTuple==endTuple:
+#             return path
+        
+#         if stateTuple not in visited:
+#             visited.add(stateTuple)
+#             for nextState in actionHq(np.array(stateTuple).reshape((3,3))):
+#                 nextTuple=tuple(nextState.flatten())
+#                 if nextTuple not in visited:
+#                     stack.appendleft((cost+1,nextTuple,path+[nextTuple]))
+#     return None
+
+
+
+if __name__=='__main__':
+    start=np.array([
+        [2,6,5],
+        [0,8,7],
+        [4,3,1]
+    ])
+    end=np.array([
+        [1,2,3],
+        [4,5,6],
+        [7,8,0]
+    ])
+    print(timeit.timeit(lambda: DFS(start,end),number=5))
