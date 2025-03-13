@@ -46,7 +46,7 @@ class AStarMethod(AStar):
         startTuple=tuple(start.flatten())
         endTuple=tuple(end.flatten())
         heapq.heappush(self.priorityQueue,(0,0,startTuple,[startTuple]))
-        parentMap={startTuple:None}
+        # parentMap={startTuple:None}
         
         while self.priorityQueue:
             _,cost,u,path=heapq.heappop(self.priorityQueue)
