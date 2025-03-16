@@ -8,6 +8,7 @@ from Uninformed.DFS import DFS
 from Uninformed.ID import ID
 from Informed.Greedy import Greedy
 from Uninformed.UCS import searchBFS_Heapq 
+from Informed.AStar import AStar
 # import interface
 
 pygame.init()
@@ -60,7 +61,8 @@ class Buttons:
             Button("UCS",300,250),
             Button("Greedy",300,300),
             Button("ID",300,350),
-            Button("QUIT",300,400),
+            Button("AStar",300,400),
+            Button("QUIT",300,450),
         ]
 
 class drawButtons(drawAble):
@@ -235,6 +237,8 @@ def main(start,end):
             path=ID(start,end)
         elif algorithm=="Greedy":
             path=Greedy(start,end)
+        elif algorithm=="AStar":
+            path=AStar.AStar(start,end)
         else:
             print("Ko dung")
             return
