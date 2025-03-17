@@ -32,7 +32,7 @@ def actionHq(state):
     # return next
 
 def ID(start,end):
-    cost=1000
+    cost=10000   
     startTuple=tuple(start.flatten())
     endTuple=tuple(end.flatten())
     while True:
@@ -49,7 +49,7 @@ def ID(start,end):
                         nextTuple=tuple(nextState.flatten())
                         if nextTuple not in visited:
                             stack.appendleft((c+1,nextTuple,path+[nextTuple]))
-        cost+=1000
+        cost+=10000
 
 if __name__=='__main__':
     start=np.array([
