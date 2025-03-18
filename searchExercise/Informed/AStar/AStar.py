@@ -19,8 +19,9 @@ def nextAction(state):
             newState=state.copy()
             newState[row,col],newState[newRow,newCol]=newState[newRow,newCol],newState[row,col]
             yield newState
-            
+a=0            
 def AStar(start:np.array,end:np.array):
+    global a
     priorityQueue=[]
     visited={}
     startTuple=tuple(start.flatten())
@@ -44,6 +45,7 @@ def AStar(start:np.array,end:np.array):
             if nextTuple not in visited or cost+1<visited[nextTuple]:
                     h=manhattan(nextState,end)
                     heapq.heappush(priorityQueue,(cost+1+h,cost+1,nextTuple,path+[nextTuple]))
+                    a=a+1
     return None
     
 
@@ -66,3 +68,4 @@ if __name__ == "__main__":
         for step in path:
             print(np.array(step).reshape((3,3)))
             print()
+    print(a)

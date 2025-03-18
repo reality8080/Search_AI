@@ -9,224 +9,65 @@ from Uninformed.ID import ID
 from Informed.Greedy import Greedy
 from Uninformed.UCS import searchBFS_Heapq 
 from Informed.AStar import AStar
+from Informed.IDAStar import IDAStar
+
+# from function.btns.drawButton import drawBtn
 # import interface
+from function.btns.drawMMenu import mainMenu
+# from function.animated.run import runPuzzle
+from function.btns.drawFigure import drawFigures
+from function.animated.animation import animation
 
 pygame.init()
 
-class drawAble(abc.ABC):
-    @abc.abstractmethod
-    def drawButton(self, button, hovered=False):
-        pass
+# class drawAble(abc.ABC):
+#     @abc.abstractmethod
+#     def drawButton(self, button, hovered=False):
+#         pass
 
-class Color():
-    WHITE=(255,255,255)
-    BLACK=(0,0,0)
-    GRAY=(113,113,113)
-    RED=(255,0,0)
-    BLUE=(0,0,255)
-    GREEN=(0,255,0)
+# class Color():
+WHITE=(255,255,255)
+BLACK=(0,0,0)
+GRAY=(113,113,113)
+RED=(255,0,0)
+BLUE=(0,0,255)
+GREEN=(0,255,0)
 
-class Config:
-    Height,Width=600,800
-    WidthBoard = 500
-    HeightBoard = 500
-    boardRows=3
-    boardCols=3
-    squareSize= WidthBoard//boardCols
-    LineWidth=5
-        
-class Screen:
-    def __init__(self):
-        self.screen=pygame.display.set_mode((Config.Width,Config.Height))
+# class Config:
+Height,Width=600,800
+WidthBoard = 500
+HeightBoard = 500
+boardRows=3
+boardCols=3
+squareSize= WidthBoard//boardCols
+LineWidth=5
+    
+# class Screen:
+#     def __init__(self):
+        # self.
+screen=pygame.display.set_mode((Width,Height))
 
-class board:
-    def __init__(self):
-        self.screen=pygame.display.set_mode((Config.WidthBoard,Config.HeightBoard))
+# class board:
+#     def __init__(self):
+#         self.
+screen=pygame.display.set_mode((WidthBoard,HeightBoard))
 
-class Font():
-    def __init__(self):
-        self.font = pygame.font.Font(None, 50)
-        self.font_board = pygame.font.Font(None, 150)
-        
-class Button:
-    def __init__(self,text:str,x:int,y:int,width=200,height=40):
-        self.text=text
-        self.rect=pygame.Rect(x,y,width,height)
-
-class Buttons:
-    def __init__(self):
-        self.buttons=[
-            Button("BFS",300,150),
-            Button("DFS",300,200),
-            Button("UCS",300,250),
-            Button("Greedy",300,300),
-            Button("ID",300,350),
-            Button("AStar",300,400),
-            Button("QUIT",300,450),
-        ]
-
-class drawButtons(drawAble):
-    def __init__(self, screen,font:Font,color:Color):
-        self.screen=screen
-        self.font=font
-        self.color=color.GRAY
-        self.colorHovered=color.BLUE
-        self.White=color.WHITE
-    def drawButton(self,button:Button,hovered=False):
-        color=self.colorHovered if hovered else self.color
-        pygame.draw.rect(self.screen,color,button.rect)
-        text=self.font.font.render(button.text, True,self.White)
-        textRect=text.get_rect(center=button.rect.center)
-        self.screen.blit(text,textRect)
-
-class drawMainMenu:
-    def __init__(self,screen):
-        self.screen=screen
-        self.font=Font()
-        self.buttons=Buttons()
-        self.drawButtons=drawButtons(screen,self.font, Color())
-    def mainMenu(self):
-        while True:
-            self.screen.fill(Color.WHITE)
-            tittle=self.font.font.render("Select Search Algorithm", True,Color.BLACK)
-            tittleRect=tittle.get_rect(center=(Config.Width//2,100))
-            self.screen.blit(tittle,tittleRect)
-
-            mousePos=pygame.mouse.get_pos()
-            for event in pygame.event.get():
-                if event.type==pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type==pygame.MOUSEBUTTONDOWN:
-                    for button in self.buttons.buttons:
-                        if button.rect.collidepoint(mousePos):
-                            return button.text
-
-            for button in self.buttons.buttons:
-                hovered=button.rect.collidepoint(mousePos)
-                self.drawButtons.drawButton(button,hovered)
-            pygame.display.flip()
-
-
-
-class drawL():
-    # def __init__(self):
-    #     self.color=Color.WHITE
-    #     self.squareSize=Config.squareSize
-    #     self.font=Font()
-    @staticmethod
-    def drawLines(screen):
-        for i in range(1, Config.boardRows):
-            pygame.draw.line(screen, Color.WHITE, start_pos=(0, i*Config.squareSize), end_pos=(Config.WidthBoard, i*Config.squareSize), width=Config.LineWidth)
-            pygame.draw.line(screen, Color.WHITE, start_pos=(i*Config.squareSize, 0), end_pos=(i*Config.squareSize, Config.HeightBoard), width=Config.LineWidth)
-class drawF:
-    @staticmethod
-    def drawFigures(screen,font,position):
-        screen.fill(Color.BLACK)
-        drawL.drawLines(screen)
-        for num, (x,y) in position.items():
-            if num != 0:  # Không vẽ ô trống (0)
-                textSurface = font.render(str(num), True, Color.WHITE)
-                textRect = textSurface.get_rect(center=(x, y))
-                screen.blit(textSurface, textRect)
-        pygame.display.update()
-
-class animated():
-    @staticmethod
-    def animation(boardRows,boardCols,squareSize,pre,next):
-        # animating=True
-        # currentStep=0
-        pre = np.array(pre).reshape((3, 3))
-        next = np.array(next).reshape((3, 3))
-        prePosition={
-            pre[row][col]:(col*squareSize+squareSize//2,row*squareSize+squareSize//2)
-            for row in range(boardRows) for col in range(boardCols)
-            if pre[row][col]!=0
-        }
-        nextPosition={
-            next[row][col]:(col*squareSize+squareSize//2,row*squareSize+squareSize//2)
-            for row in range(boardRows) for col in range(boardCols)
-            if next[row][col]!=0
-        }
-        # pygame.display.update()
-        return prePosition, nextPosition
-
-class run:
-    def __init__(self, pre,next):
-        self.index=0
-        self.moveSpeed=5
-        self.animating=False
-        self.currentStep=0
-        self.steps=Config.squareSize//self.moveSpeed
-        self.prePosition=pre
-        self.nextPosition=next
-        self.font=Font()
-    def runPuzzle(self,start, end, path):
-        # global position, animating, currentStep, prePosition, nextPosition, squareSize
-
-        screenBoard = pygame.display.set_mode((Config.WidthBoard, Config.HeightBoard))
-        FPS = 144
-
-        self.currentState = np.array(start).reshape((3, 3))
-
-        position = {
-            start[row][col]: (col * Config.squareSize + Config.squareSize // 2, row * Config.squareSize + Config.squareSize // 2)
-            for row in range(Config.boardRows) for col in range(Config.boardCols)
-            if start[row][col] != 0
-        }
-
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-            screenBoard.fill(Color.BLACK)
-            drawF.drawFigures(screenBoard,self.font.font_board,position)
-            pygame.display.update()
-
-            if not self.animating and self.index<len(path)-1:
-                self.currentState=np.array(path[self.index+1]).reshape((3,3))
-                self.prePosition,self.nextPosition=animated.animation(Config.boardRows,Config.boardCols,Config.squareSize,path[self.index], path[self.index+1])
-                self.index+=1
-                self.animating=True
-
-            # currenTime= pygame.time.get_ticks()
-            if self.animating:
-                self.currentStep+=1
-                if self.currentStep<self.steps:
-                    for num in self.prePosition:
-                        x1,y1=self.prePosition[num]
-                        x2,y2=self.nextPosition[num]
-                        newX=x1+(x2-x1)*(self.currentStep+1)/self.steps
-                        newY=y1+(y2-y1)*(self.currentStep+1)/self.steps
-                        position[num]=(newX,newY)
-                else:
-                    position=self.nextPosition.copy()
-                    self.animating=False
-                    self.currentStep=0
-                # pygame.time.delay(10)
-            # drawF.drawFigures(screenBoard, start if self.index==0 else path[self.index], position,Color.WHITE,Color.BLACK,self.font.font_board,Config.squareSize)
-            drawF.drawFigures(screenBoard,self.font.font_board,position)
-            pygame.display.flip()
-            pygame.time.Clock().tick(FPS)
-
-            if self.index>len(path)-2 and not self.animating:
-                pygame.time.wait(4000)
-                return
-    # def restart():
-    #     self.
-        
-        
-# screen=pygame.display.set_mode((Width,Height))
+# class Font():
+#     def __init__(self):
+        # self.font = pygame.font.Font(None, 50)
+        # self.font_board = pygame.font.Font(None, 150)
+font = pygame.font.Font(None, 50)
+fontBoard = pygame.font.Font(None, 150)
 
 def main(start,end):
     global screen
     
     while True:
-        screen = pygame.display.set_mode((Config.Width, Config.Height))
+        screen = pygame.display.set_mode((Width, Height))
+        # screen.fill(WHITE)
         # algorithm=drawMainMenu.mainMenu(screen)
-        mainMenu=drawMainMenu(screen)
-        algorithm=mainMenu.mainMenu()
+        # mainMenu=mainMenu(screen)
+        algorithm=mainMenu(screen, Width, BLUE, GRAY, WHITE, BLACK)
         if algorithm=="BFS":
             path=searchBFS(start,end)
         elif algorithm=="DFS":
@@ -239,13 +80,14 @@ def main(start,end):
             path=Greedy(start,end)
         elif algorithm=="AStar":
             path=AStar.AStar(start,end)
+        elif algorithm=="IDAStar":
+            path=IDAStar(start,end)
         else:
             print("Ko dung")
             return
         running=True
         # interface.run(WidthBoard,HeightBoard, path)
-        runner = run({}, {})
-        runner.runPuzzle(start, end, path)
+        runPuzzle(start, 30, path,WHITE,BLACK,WidthBoard,HeightBoard,squareSize,boardRows,boardCols,fontBoard,LineWidth)
         # while running:
         #     for event in pygame.event.get():
         #         if event.type ==pygame.QUIT:
@@ -253,6 +95,64 @@ def main(start,end):
         #     screen.fill(WHITE)
         #     pygame.display.flip()
         # pygame.quit()
+
+
+
+def runPuzzle(start, steps, path,WHITE,BLACK,WidthBoard, HeightBoard,squareSize,boardRows,boardCols,fontBoard,LineWidth):
+    global position, prePosition, nextPosition
+
+    screenBoard = pygame.display.set_mode((WidthBoard, HeightBoard))
+    FPS = 144
+    animating=False
+    index = 0          
+    currentStep=0
+
+    currentState = np.array(start).reshape((3, 3))
+
+    position = {
+        start[row][col]: (col * squareSize + squareSize // 2, row * squareSize + squareSize // 2)
+        for row in range(boardRows) for col in range(boardCols)
+        if start[row][col] != 0
+    }
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        screenBoard.fill(BLACK)
+        drawFigures(screenBoard,fontBoard,position,WHITE,BLACK,boardRows,squareSize,WidthBoard,HeightBoard,LineWidth)
+        pygame.display.update()
+
+        if not animating and index<len(path)-1:
+            currentState=np.array(path[index+1]).reshape((3,3))
+            prePosition,nextPosition=animation(boardRows,boardCols,squareSize,path[index], path[index+1])
+            index+=1
+            animating=True
+
+        # currenTime= pygame.time.get_ticks()
+        if animating:
+            currentStep+=1
+            if currentStep<steps:
+                for num in prePosition:
+                    x1,y1=prePosition[num]
+                    x2,y2=nextPosition[num]
+                    newX=x1+(x2-x1)*(currentStep+1)/steps
+                    newY=y1+(y2-y1)*(currentStep+1)/steps
+                    position[num]=(newX,newY)
+            else:
+                position=nextPosition.copy()
+                animating=False
+                currentStep=0
+            # pygame.time.delay(10)
+        # drawF.drawFigures(screenBoard, start if index==0 else path[index], position,Color.WHITE,Color.BLACK,font.font_board,Config.squareSize)
+        drawFigures(screenBoard,fontBoard,position,WHITE,BLACK,boardRows,squareSize,WidthBoard,HeightBoard,LineWidth)
+        pygame.display.flip()
+        pygame.time.Clock().tick(FPS)
+
+        if index>len(path)-2 and not animating:
+            pygame.time.wait(4000)
+            return
 
 if __name__ =="__main__":
     start=np.array([
