@@ -35,15 +35,17 @@ def ID(start,end):
     cost=10000   
     startTuple=tuple(start.flatten())
     endTuple=tuple(end.flatten())
+    i=0
     while True:
         stack=deque([(0,startTuple,[startTuple])])
         visited=set()
         while stack:
             c,stateTuple, path=stack.pop()
             if stateTuple==endTuple:
-                return path
+                return i, path
             if c <cost:
                 if stateTuple not in visited:
+                    i+=1
                     visited.add(stateTuple)
                     for nextState in actionHq(np.array(stateTuple).reshape((3,3))):
                         nextTuple=tuple(nextState.flatten())

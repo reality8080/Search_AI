@@ -21,13 +21,13 @@ def nextAction(state):
             yield newState
             
 def IDAStar(start:np.array,end:np.array):
-    i=24
-    while i:
+    o=24
+    while o:
         priorityQueue=[]
         visited={}
         startTuple=tuple(start.flatten())
         endTuple=tuple(end.flatten())
-        
+        i=0
         heapq.heappush(priorityQueue,(0,0,startTuple,[startTuple]))
         while priorityQueue:
             
@@ -40,15 +40,16 @@ def IDAStar(start:np.array,end:np.array):
             visited[u]=int(cost)
             
             if u == endTuple:
-                return path
+                return i,path
+            i+=1
             for nextState in nextAction(np.array(u).reshape((3,3))):
                 nextTuple=tuple(nextState.flatten())
                 if nextTuple not in visited or cost+1<visited[nextTuple]:
                         h=manhattan(nextState,end)
-                        if (cost+1+h<=i):
+                        if (cost+1+h<=o):
                             heapq.heappush(priorityQueue,(cost+1+h,cost+1,nextTuple,path+[nextTuple]))
-        i+=24
-    return None
+        o+=24
+    return None, None
     
 
 if __name__ == "__main__":
@@ -65,8 +66,7 @@ if __name__ == "__main__":
     ])
     
     print(timeit.timeit(lambda:IDAStar(start,end),number=5))
-    path=IDAStar(start,end)
+    i,path=IDAStar(start,end)
     if path:
         for step in path:
             print(np.array(step).reshape((3,3)))
-            print()

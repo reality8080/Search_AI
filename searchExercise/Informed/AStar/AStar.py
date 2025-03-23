@@ -26,7 +26,7 @@ def AStar(start:np.array,end:np.array):
     visited={}
     startTuple=tuple(start.flatten())
     endTuple=tuple(end.flatten())
-    
+    i=0
     heapq.heappush(priorityQueue,(0,0,startTuple,[startTuple]))
     while priorityQueue:
         
@@ -39,14 +39,15 @@ def AStar(start:np.array,end:np.array):
         visited[u]=int(cost)
         
         if u == endTuple:
-            return path
+            return i,path
+        i+=1
         for nextState in nextAction(np.array(u).reshape((3,3))):
             nextTuple=tuple(nextState.flatten())
             if nextTuple not in visited or cost+1<visited[nextTuple]:
                     h=manhattan(nextState,end)
                     heapq.heappush(priorityQueue,(cost+1+h,cost+1,nextTuple,path+[nextTuple]))
                     a=a+1
-    return None
+    return None, None
     
 
 if __name__ == "__main__":

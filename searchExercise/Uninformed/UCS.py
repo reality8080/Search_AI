@@ -44,7 +44,7 @@ def searchBFS_Heapq(start,end):
     endTuple=tuple(end.flatten())
 
     heapq.heappush(priorityQueue,(0, startTuple,[startTuple]))
-
+    i=0
     while priorityQueue:
         cost,stateTuple,path=heapq.heappop(priorityQueue)
 
@@ -55,23 +55,14 @@ def searchBFS_Heapq(start,end):
         visited[stateTuple]=int(cost)
 
         if stateTuple==endTuple:
-            # path=[start]
-            # currState=start.copy()
-            # for move in moves:
-            #     for nextState, m in actionHq(u):
-            #         if m==move:
-            #             path.append(nextState)
-            #             currState=nextState
-            #             break
-            # return path
-            return path
-        
+            return i,path
+        i+=1
         for nextState in actionHq(np.array(stateTuple).reshape((3,3))):
             nextTuple=tuple(nextState.flatten())
             if nextTuple not in visited or cost+1<visited[nextTuple]:
                 # h=manhattan(nextState,end)
                 heapq.heappush(priorityQueue,(cost+1,nextTuple, path+[nextTuple]))
-    return None
+    return None, None
 
 if __name__=='__main__':
     start=np.array([

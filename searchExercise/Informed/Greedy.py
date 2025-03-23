@@ -42,7 +42,7 @@ def Greedy(start,end):
     visited=set()
     startTuple=tuple(start.flatten())
     endTuple=tuple(end.flatten())
-
+    i=0
     heapq.heappush(priorityQueue,(manhattan(start,end),startTuple,[startTuple]))
     while priorityQueue:
         _,stateTuple,path=heapq.heappop(priorityQueue)
@@ -50,13 +50,14 @@ def Greedy(start,end):
             continue
         visited.add(stateTuple)
         if stateTuple==endTuple:
-            return path
+            return i, path
+        i+=1
         for nextState in actionHq(np.array(stateTuple).reshape((3,3))):
             nextTuple=tuple(nextState.flatten())
             if nextTuple not in visited:
                 h=manhattan(nextState,end)
                 heapq.heappush(priorityQueue,(h,nextTuple,path+[nextTuple]))
-    return None
+    return None,None
 
 if __name__=='__main__':
     start=np.array([

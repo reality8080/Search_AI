@@ -36,20 +36,23 @@ def DFS(start,end):
     visited=set()
     startTuple=tuple(start.flatten())
     endTuple=tuple(end.flatten())
-
+    i=0
+    
     stack.append((startTuple,[startTuple]))
     while stack:
         stateTuple, path=stack.pop()
+        
         if stateTuple==endTuple:
-            return path
+            return i, path
         
         if stateTuple not in visited:
+            i+=1
             visited.add(stateTuple)
             for nextState in actionHq(np.array(stateTuple).reshape((3,3))):
                 nextTuple=tuple(nextState.flatten())
                 if nextTuple not in visited:
                     stack.appendleft((nextTuple,path+[nextTuple]))
-    return None
+    return None, None
 
 # def ID(start,end):
 #     cost=0

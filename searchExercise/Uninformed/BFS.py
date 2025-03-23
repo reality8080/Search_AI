@@ -75,6 +75,7 @@ def searchBFS_Heapq(start,end):
 
 
 def searchBFS(start,end):
+    i=0
     Queue=collections.deque()
     visited=set()
     startTuple=tuple(start.flatten())
@@ -86,15 +87,16 @@ def searchBFS(start,end):
         stateTuple, path=Queue.popleft()
 
         if stateTuple==endTuple:
-            return path
+            return i, path
         if stateTuple in visited:
             continue
+        i+=1
         visited.add(stateTuple)
         for nextState in actionHq(np.array(stateTuple).reshape((3,3))):
             nextTuple=tuple(nextState.flatten())
             if nextTuple not in visited:
                 Queue.append([nextTuple,path+[nextTuple]])
-    return None
+    return None, None
 
 if __name__=='__main__':
     start=np.array([

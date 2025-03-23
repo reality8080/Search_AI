@@ -1,9 +1,9 @@
 import pygame
 import sys
 import numpy as np
-import abc
+import timeit
 
-from Uninformed.BFS import searchBFS, actionHq
+from Uninformed.BFS import searchBFS
 from Uninformed.DFS import DFS
 from Uninformed.ID import ID
 from Informed.Greedy import Greedy
@@ -56,32 +56,48 @@ screen=pygame.display.set_mode((WidthBoard,HeightBoard))
 #     def __init__(self):
         # self.font = pygame.font.Font(None, 50)
         # self.font_board = pygame.font.Font(None, 150)
-font = pygame.font.Font(None, 50)
+font = pygame.font.Font(None, 100)
 fontBoard = pygame.font.Font(None, 150)
 
 def main(start,end):
     global screen
-    
+    time=None
+    algorithmLb=None
+    BTN=[]
     while True:
         screen = pygame.display.set_mode((Width, Height))
         # screen.fill(WHITE)
         # algorithm=drawMainMenu.mainMenu(screen)
         # mainMenu=mainMenu(screen)
-        algorithm=mainMenu(screen, Width, BLUE, GRAY, WHITE, BLACK)
+        algorithm=mainMenu(screen, Width, BLUE, GRAY, WHITE, BLACK,algorithmLb, time, BTN)
         if algorithm=="BFS":
-            path=searchBFS(start,end)
+            spaceState,path=searchBFS(start,end)
+            timeTaken=timeit.timeit(lambda:searchBFS(start,end),number=1)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="DFS":
-            path=DFS(start,end)
+            spaceState,path=DFS(start,end)
+            timeTaken=timeit.timeit(lambda:DFS(start,end),number=1)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="UCS":
-            path=searchBFS_Heapq(start,end)
+            spaceState,path=searchBFS_Heapq(start,end)
+            timeTaken=timeit.timeit(lambda:searchBFS_Heapq(start,end),number=1)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="ID":
-            path=ID(start,end)
+            spaceState,path=ID(start,end)
+            timeTaken=timeit.timeit(lambda:ID(start,end),number=1)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="Greedy":
-            path=Greedy(start,end)
+            spaceState,path=Greedy(start,end)
+            timeTaken=timeit.timeit(lambda:Greedy(start,end),number=1)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="AStar":
-            path=AStar.AStar(start,end)
+            spaceState,path=AStar.AStar(start,end)
+            timeTaken=timeit.timeit(lambda:AStar.AStar(start,end),number=1)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="IDAStar":
-            path=IDAStar(start,end)
+            spaceState,path=IDAStar(start,end)
+            timeTaken=timeit.timeit(lambda:IDAStar(start,end),number=1)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         else:
             print("Ko dung")
             return
@@ -153,7 +169,20 @@ def runPuzzle(start, steps, path,WHITE,BLACK,WidthBoard, HeightBoard,squareSize,
         if index>len(path)-2 and not animating:
             pygame.time.wait(4000)
             return
-
+def save_result_to_file(filename, algorithm, time, path,spaceState):
+    with open(filename, "w", encoding="utf-8") as file:
+        file.write(f"Thuật toán: {algorithm}\n")
+        file.write(f"Thời gian chạy: {time:.6f} giây\n")
+        file.write(f"Số trạng thái duyệt: {spaceState}\n")
+        file.write(f"Số trạng thái đường đi: {len(path)}\n")
+        file.write("Đường đi:\n")
+        
+        for i, step in enumerate(path):
+            file.write(f"\nBước {i + 1}:\n")
+            step_matrix = np.array(step).reshape(3, 3)  # Đảm bảo mỗi bước là ma trận 3x3
+            for row in step_matrix:
+                file.write(" ".join(map(str, row)) + "\n")
+                    
 if __name__ =="__main__":
     start=np.array([
         [2,6,5],
