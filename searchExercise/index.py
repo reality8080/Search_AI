@@ -10,22 +10,18 @@ from Informed.Greedy import Greedy
 from Uninformed.UCS import searchBFS_Heapq 
 from Informed.AStar import AStar
 from Informed.IDAStar import IDAStar
+from LocalSearch.RandomHillClimbing import search as RandomHillClimbing
+from LocalSearch.SimpHillClimbing import search as SimpHillClimbing
+from LocalSearch.SteepesHillClimbing import search as SteepesHillClimbing
+from LocalSearch.SimulatedAnnealing import search as SimulatedAnnealing
+from LocalSearch.BeamSearch import search as BeamSearch
 
-# from function.btns.drawButton import drawBtn
-# import interface
 from function.btns.drawMMenu import mainMenu
-# from function.animated.run import runPuzzle
 from function.btns.drawFigure import drawFigures
 from function.animated.animation import animation
 
 pygame.init()
 
-# class drawAble(abc.ABC):
-#     @abc.abstractmethod
-#     def drawButton(self, button, hovered=False):
-#         pass
-
-# class Color():
 WHITE=(255,255,255)
 BLACK=(0,0,0)
 GRAY=(113,113,113)
@@ -42,20 +38,12 @@ boardCols=3
 squareSize= WidthBoard//boardCols
 LineWidth=5
     
-# class Screen:
-#     def __init__(self):
-        # self.
+
 screen=pygame.display.set_mode((Width,Height))
 
-# class board:
-#     def __init__(self):
-#         self.
+
 screen=pygame.display.set_mode((WidthBoard,HeightBoard))
 
-# class Font():
-#     def __init__(self):
-        # self.font = pygame.font.Font(None, 50)
-        # self.font_board = pygame.font.Font(None, 150)
 font = pygame.font.Font(None, 100)
 fontBoard = pygame.font.Font(None, 150)
 
@@ -66,53 +54,61 @@ def main(start,end):
     BTN=[]
     while True:
         screen = pygame.display.set_mode((Width, Height))
-        # screen.fill(WHITE)
-        # algorithm=drawMainMenu.mainMenu(screen)
-        # mainMenu=mainMenu(screen)
+
         algorithm=mainMenu(screen, Width, BLUE, GRAY, WHITE, BLACK,algorithmLb, time, BTN)
         if algorithm=="BFS":
             spaceState,path=searchBFS(start,end)
-            timeTaken=timeit.timeit(lambda:searchBFS(start,end),number=1)
+            timeTaken=timeit.timeit(lambda:searchBFS(start,end),number=2)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="DFS":
             spaceState,path=DFS(start,end)
-            timeTaken=timeit.timeit(lambda:DFS(start,end),number=1)
+            timeTaken=timeit.timeit(lambda:DFS(start,end),number=2)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="UCS":
             spaceState,path=searchBFS_Heapq(start,end)
-            timeTaken=timeit.timeit(lambda:searchBFS_Heapq(start,end),number=1)
+            timeTaken=timeit.timeit(lambda:searchBFS_Heapq(start,end),number=2)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="ID":
             spaceState,path=ID(start,end)
-            timeTaken=timeit.timeit(lambda:ID(start,end),number=1)
+            timeTaken=timeit.timeit(lambda:ID(start,end),number=2)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="Greedy":
             spaceState,path=Greedy(start,end)
-            timeTaken=timeit.timeit(lambda:Greedy(start,end),number=1)
+            timeTaken=timeit.timeit(lambda:Greedy(start,end),number=2)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="AStar":
             spaceState,path=AStar.AStar(start,end)
-            timeTaken=timeit.timeit(lambda:AStar.AStar(start,end),number=1)
+            timeTaken=timeit.timeit(lambda:AStar.AStar(start,end),number=2)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="IDAStar":
             spaceState,path=IDAStar(start,end)
-            timeTaken=timeit.timeit(lambda:IDAStar(start,end),number=1)
+            timeTaken=timeit.timeit(lambda:IDAStar(start,end),number=2)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
+        elif algorithm=="SimpleHillClimbing":
+            spaceState,path=SimpHillClimbing(start,end)
+            timeTaken=timeit.timeit(lambda:SimpHillClimbing(start,end),number=2)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
+        elif algorithm=="SHillClimbing":
+            spaceState,path=SteepesHillClimbing(start,end)
+            timeTaken=timeit.timeit(lambda:SteepesHillClimbing(start,end),number=2)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
+        elif algorithm=="RHillClimbing":
+            spaceState,path=RandomHillClimbing(start,end)
+            timeTaken=timeit.timeit(lambda:RandomHillClimbing(start,end),number=2)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
+        elif algorithm=="SimulatedAnne":
+            spaceState,path=SimulatedAnnealing(start,end)
+            timeTaken=timeit.timeit(lambda:RandomHillClimbing(start,end),number=2)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
+        elif algorithm=="Beam Search":
+            spaceState,path=BeamSearch(start,end,10)
+            timeTaken=timeit.timeit(lambda:BeamSearch(start,end,10),number=2)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         else:
             print("Ko dung")
             return
         running=True
-        # interface.run(WidthBoard,HeightBoard, path)
         runPuzzle(start, 30, path,WHITE,BLACK,WidthBoard,HeightBoard,squareSize,boardRows,boardCols,fontBoard,LineWidth)
-        # while running:
-        #     for event in pygame.event.get():
-        #         if event.type ==pygame.QUIT:
-        #             running=False
-        #     screen.fill(WHITE)
-        #     pygame.display.flip()
-        # pygame.quit()
-
-
 
 def runPuzzle(start, steps, path,WHITE,BLACK,WidthBoard, HeightBoard,squareSize,boardRows,boardCols,fontBoard,LineWidth):
     global position, prePosition, nextPosition
@@ -146,7 +142,6 @@ def runPuzzle(start, steps, path,WHITE,BLACK,WidthBoard, HeightBoard,squareSize,
             index+=1
             animating=True
 
-        # currenTime= pygame.time.get_ticks()
         if animating:
             currentStep+=1
             if currentStep<steps:
@@ -160,8 +155,7 @@ def runPuzzle(start, steps, path,WHITE,BLACK,WidthBoard, HeightBoard,squareSize,
                 position=nextPosition.copy()
                 animating=False
                 currentStep=0
-            # pygame.time.delay(10)
-        # drawF.drawFigures(screenBoard, start if index==0 else path[index], position,Color.WHITE,Color.BLACK,font.font_board,Config.squareSize)
+
         drawFigures(screenBoard,fontBoard,position,WHITE,BLACK,boardRows,squareSize,WidthBoard,HeightBoard,LineWidth)
         pygame.display.flip()
         pygame.time.Clock().tick(FPS)

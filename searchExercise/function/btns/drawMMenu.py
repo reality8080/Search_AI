@@ -12,7 +12,7 @@ def mainMenu(screen,Width,BLUE, GRAY, White,BLACK, algorithm,time,BTN):
     while True:
         screen.fill(White)
         tittle=font.render("Select Search Algorithm", True,BLACK)
-        tittleRect=tittle.get_rect(center=(Width//2,100))
+        tittleRect=tittle.get_rect(center=(Width//2,50))
         screen.blit(tittle,tittleRect)
         
         mousePos=pygame.mouse.get_pos()
