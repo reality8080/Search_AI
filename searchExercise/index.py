@@ -127,6 +127,9 @@ def runPuzzle(start, steps, path,WHITE,BLACK,WidthBoard, HeightBoard,squareSize,
     currentStep=0
     frames = []
 
+    output_dir = "animations"
+    os.makedirs(output_dir, exist_ok=True)
+    
     currentState = np.array(start).reshape((3, 3))
 
     position = {
@@ -185,7 +188,7 @@ def runPuzzle(start, steps, path,WHITE,BLACK,WidthBoard, HeightBoard,squareSize,
             
             selectedFrames=frames[::2]
             timestamp=time.strftime("%Y%m%d_%H%M%S")
-            filename=f"puzzleAnimation_{timestamp}.gif"
+            filename = os.path.join(output_dir, f"puzzleAnimation_{timestamp}.gif")
             imageio.mimsave(filename,selectedFrames,duration=FPS/2)
     except Exception as e:
         print(f"Lỗi khi lưu animation: {e}")
