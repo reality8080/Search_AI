@@ -14,6 +14,7 @@ def createBtn():
         "RHillClimbing",
         "SimulatedAnne",
         "Beam Search",
+        "Genetic Algorithm",
         "QUIT"
     ]
     btns=[]

@@ -1,7 +1,9 @@
 import pygame
 import sys
 import numpy as np
-import timeit
+import timeit, time
+import imageio
+import os
 
 from Uninformed.BFS import searchBFS
 from Uninformed.DFS import DFS
@@ -15,6 +17,7 @@ from LocalSearch.SimpHillClimbing import search as SimpHillClimbing
 from LocalSearch.SteepesHillClimbing import search as SteepesHillClimbing
 from LocalSearch.SimulatedAnnealing import search as SimulatedAnnealing
 from LocalSearch.BeamSearch import search as BeamSearch
+from LocalSearch.GeneticAlgorithm import search as GeneticAlgorithm
 
 from function.btns.drawMMenu import mainMenu
 from function.btns.drawFigure import drawFigures
@@ -58,51 +61,55 @@ def main(start,end):
         algorithm=mainMenu(screen, Width, BLUE, GRAY, WHITE, BLACK,algorithmLb, time, BTN)
         if algorithm=="BFS":
             spaceState,path=searchBFS(start,end)
-            timeTaken=timeit.timeit(lambda:searchBFS(start,end),number=2)
+            timeTaken=timeit.timeit(lambda:searchBFS(start,end),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="DFS":
             spaceState,path=DFS(start,end)
-            timeTaken=timeit.timeit(lambda:DFS(start,end),number=2)
+            timeTaken=timeit.timeit(lambda:DFS(start,end),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="UCS":
             spaceState,path=searchBFS_Heapq(start,end)
-            timeTaken=timeit.timeit(lambda:searchBFS_Heapq(start,end),number=2)
+            timeTaken=timeit.timeit(lambda:searchBFS_Heapq(start,end),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="ID":
             spaceState,path=ID(start,end)
-            timeTaken=timeit.timeit(lambda:ID(start,end),number=2)
+            timeTaken=timeit.timeit(lambda:ID(start,end),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="Greedy":
             spaceState,path=Greedy(start,end)
-            timeTaken=timeit.timeit(lambda:Greedy(start,end),number=2)
+            timeTaken=timeit.timeit(lambda:Greedy(start,end),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="AStar":
             spaceState,path=AStar.AStar(start,end)
-            timeTaken=timeit.timeit(lambda:AStar.AStar(start,end),number=2)
+            timeTaken=timeit.timeit(lambda:AStar.AStar(start,end),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="IDAStar":
             spaceState,path=IDAStar(start,end)
-            timeTaken=timeit.timeit(lambda:IDAStar(start,end),number=2)
+            timeTaken=timeit.timeit(lambda:IDAStar(start,end),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="SimpleHillClimbing":
             spaceState,path=SimpHillClimbing(start,end)
-            timeTaken=timeit.timeit(lambda:SimpHillClimbing(start,end),number=2)
+            timeTaken=timeit.timeit(lambda:SimpHillClimbing(start,end),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="SHillClimbing":
             spaceState,path=SteepesHillClimbing(start,end)
-            timeTaken=timeit.timeit(lambda:SteepesHillClimbing(start,end),number=2)
+            timeTaken=timeit.timeit(lambda:SteepesHillClimbing(start,end),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="RHillClimbing":
             spaceState,path=RandomHillClimbing(start,end)
-            timeTaken=timeit.timeit(lambda:RandomHillClimbing(start,end),number=2)
+            timeTaken=timeit.timeit(lambda:RandomHillClimbing(start,end),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="SimulatedAnne":
             spaceState,path=SimulatedAnnealing(start,end)
-            timeTaken=timeit.timeit(lambda:RandomHillClimbing(start,end),number=2)
+            timeTaken=timeit.timeit(lambda:RandomHillClimbing(start,end),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         elif algorithm=="Beam Search":
             spaceState,path=BeamSearch(start,end,10)
-            timeTaken=timeit.timeit(lambda:BeamSearch(start,end,10),number=2)
+            timeTaken=timeit.timeit(lambda:BeamSearch(start,end,10),number=5)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
+        elif algorithm=="Genetic Algorithm":
+            spaceState,path=GeneticAlgorithm(start,end, 100,1000, 0.1)
+            timeTaken=timeit.timeit(lambda:GeneticAlgorithm(start,end, 100,1000, 0.1),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
         else:
             print("Ko dung")
@@ -114,10 +121,11 @@ def runPuzzle(start, steps, path,WHITE,BLACK,WidthBoard, HeightBoard,squareSize,
     global position, prePosition, nextPosition
 
     screenBoard = pygame.display.set_mode((WidthBoard, HeightBoard))
-    FPS = 144
+    FPS = 60
     animating=False
     index = 0          
     currentStep=0
+    frames = []
 
     currentState = np.array(start).reshape((3, 3))
 
@@ -127,42 +135,61 @@ def runPuzzle(start, steps, path,WHITE,BLACK,WidthBoard, HeightBoard,squareSize,
         if start[row][col] != 0
     }
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-        screenBoard.fill(BLACK)
-        drawFigures(screenBoard,fontBoard,position,WHITE,BLACK,boardRows,squareSize,WidthBoard,HeightBoard,LineWidth)
-        pygame.display.update()
+    try:
+        
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            screenBoard.fill(BLACK)
+            drawFigures(screenBoard,fontBoard,position,WHITE,BLACK,boardRows,squareSize,WidthBoard,HeightBoard,LineWidth)
+            
+            frame= pygame.surfarray.array3d(screenBoard)
+            frames.append(frame)
+            
+            pygame.display.update()
 
-        if not animating and index<len(path)-1:
-            currentState=np.array(path[index+1]).reshape((3,3))
-            prePosition,nextPosition=animation(boardRows,boardCols,squareSize,path[index], path[index+1])
-            index+=1
-            animating=True
+            if not animating and index<len(path)-1:
+                currentState=np.array(path[index+1]).reshape((3,3))
+                prePosition,nextPosition=animation(boardRows,boardCols,squareSize,path[index], path[index+1])
+                index+=1
+                animating=True
 
-        if animating:
-            currentStep+=1
-            if currentStep<steps:
-                for num in prePosition:
-                    x1,y1=prePosition[num]
-                    x2,y2=nextPosition[num]
-                    newX=x1+(x2-x1)*(currentStep+1)/steps
-                    newY=y1+(y2-y1)*(currentStep+1)/steps
-                    position[num]=(newX,newY)
-            else:
-                position=nextPosition.copy()
-                animating=False
-                currentStep=0
+            if animating:
+                currentStep+=1
+                if currentStep<steps:
+                    for num in prePosition:
+                        x1,y1=prePosition[num]
+                        x2,y2=nextPosition[num]
+                        newX=x1+(x2-x1)*(currentStep+1)/steps
+                        newY=y1+(y2-y1)*(currentStep+1)/steps
+                        position[num]=(newX,newY)
+                else:
+                    position=nextPosition.copy()
+                    animating=False
+                    currentStep=0
 
-        drawFigures(screenBoard,fontBoard,position,WHITE,BLACK,boardRows,squareSize,WidthBoard,HeightBoard,LineWidth)
-        pygame.display.flip()
-        pygame.time.Clock().tick(FPS)
+            drawFigures(screenBoard,fontBoard,position,WHITE,BLACK,boardRows,squareSize,WidthBoard,HeightBoard,LineWidth)
+            
+            frame=pygame.surfarray.array3d(screenBoard)
+            frames.append(frame)
+            
+            pygame.display.flip()
+            pygame.time.Clock().tick(FPS)
 
-        if index>len(path)-2 and not animating:
-            pygame.time.wait(4000)
-            return
+            if index>len(path)-2 and not animating:
+                break
+        if frames:
+            frames = [frame.swapaxes(0,1) for frame in frames]
+            
+            selectedFrames=frames[::2]
+            timestamp=time.strftime("%Y%m%d_%H%M%S")
+            filename=f"puzzleAnimation_{timestamp}.gif"
+            imageio.mimsave(filename,selectedFrames,duration=FPS/2)
+    except Exception as e:
+        print(f"Lỗi khi lưu animation: {e}")
+        pygame.time.wait(2000)
 def save_result_to_file(filename, algorithm, time, path,spaceState):
     with open(filename, "w", encoding="utf-8") as file:
         file.write(f"Thuật toán: {algorithm}\n")
@@ -190,3 +217,4 @@ if __name__ =="__main__":
         [7,8,0]
     ])
     main(start=start,end=end)
+    

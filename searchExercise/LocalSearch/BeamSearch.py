@@ -5,7 +5,7 @@ import math
 
 def neighbor(state):
     row, col = np.argwhere(state==0)[0]
-    moves = [(-1,0,), (0,-1,), (1,0,), (0,1,)]
+    moves = [(-1,0), (0,-1), (1,0), (0,1)]
     neighbors=[]
     for dr,dc in moves:
         newRow = dr + row
@@ -13,7 +13,8 @@ def neighbor(state):
         if (0<=newRow<3) and (0<=newCol<3):
             newState = state.copy()
             newState[row,col], newState[newRow,newCol] = newState[newRow,newCol],newState[row,col]
-            yield(newState)
+            neighbors.append(newState)
+    return neighbors
 
 def Euclidean(state,goal):
     return sum(math.sqrt(math.pow((r1-r2),2)+math.pow((c1-c2),2))
@@ -62,4 +63,4 @@ if __name__=="__main__":
     print(i)
     if path:
         for step in path:
-            print(np.array(step).reshape((3,3)))
+            print(np.array(step).reshape((3,3)),end="\n")
