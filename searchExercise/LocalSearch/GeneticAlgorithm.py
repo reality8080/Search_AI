@@ -125,26 +125,6 @@ def mutate(state,mutationRate):
                 newState[row, col], newState[newRow, newCol] = newState[newRow, newCol], newState[row, col]
         return newState.flatten()
     return state
-
-# def populationDiversity(population):
-#     uniqueStates=set(tuple(state) for state in population)
-#     return len(uniqueStates)/len(population)
-
-# def isSolvable(state):
-#     flat=state.flatten()
-#     inversions = 0
-#     for i in range(len(flat)):
-#         for j in range(i+1, len(flat)):
-#             if flat[i]!=0 and flat[j]!=0 and flat[i]>flat[j]:
-#                 inversions+=1
-#     return inversions%2==0
-
-# def addNoise(state, noiseRate):
-#     if random.random() < noiseRate:
-#         return neighborRandomState(state, 1)
-#     return state
-
-# def multiPointCrossover(parent1, parent2):
     
 
 def search(start, end, populationSize, generations, mutationRate):
