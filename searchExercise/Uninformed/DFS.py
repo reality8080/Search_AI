@@ -3,7 +3,7 @@ import numpy as np
 import timeit
 # import queue
 from collections import deque
-import heapq
+# import heapq
 # import itertools
 
 # counter=itertools.count()

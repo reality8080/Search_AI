@@ -47,7 +47,7 @@ def AStar(start:np.array,end:np.array):
                     h=manhattan(nextState,end)
                     heapq.heappush(priorityQueue,(cost+1+h,cost+1,nextTuple,path+[nextTuple]))
                     a=a+1
-    return None, None
+    return None
     
 
 if __name__ == "__main__":

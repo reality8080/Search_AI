@@ -1,7 +1,8 @@
 import pygame
 import sys
 import numpy as np
-import timeit, time
+import timeit
+import time as time
 import imageio
 import os
 
@@ -18,6 +19,12 @@ from LocalSearch.SteepesHillClimbing import search as SteepesHillClimbing
 from LocalSearch.SimulatedAnnealing import search as SimulatedAnnealing
 from LocalSearch.BeamSearch import search as BeamSearch
 from LocalSearch.GeneticAlgorithm import search as GeneticAlgorithm
+from SearchInComplex.AND_OR_ASTAR import hybridAStar_AND_OR as AND_OR
+from SearchInComplex.AStarNoOb import AStarNoOb as AStarNoOb
+from SearchInComplex.AStarNoOb import BeliefList
+from CSP.SeePartOfMatrix import solve_partial_8puzzle as SeePartOfMatrix
+from CSP.CSP_BackTracking import solve_csp_8puzzle as CSPBackTracking, print_board
+from Qlearing.QL import trainAstar as QLearning, solve as solve_QLearning
 
 from function.btns.drawMMenu import mainMenu
 from function.btns.drawFigure import drawFigures
@@ -52,7 +59,7 @@ fontBoard = pygame.font.Font(None, 150)
 
 def main(start,end):
     global screen
-    time=None
+    # time=None
     algorithmLb=None
     BTN=[]
     while True:
@@ -111,6 +118,45 @@ def main(start,end):
             spaceState,path=GeneticAlgorithm(start,end, 100,1000, 0.1)
             timeTaken=timeit.timeit(lambda:GeneticAlgorithm(start,end, 100,1000, 0.1),number=5)
             save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
+        
+        elif algorithm=="AND_OR":
+            spaceState,path=AND_OR(start,end)
+            timeTaken=timeit.timeit(lambda:AND_OR(start,end),number=1)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
+            
+        elif algorithm=="NoOb":
+            listStart=BeliefList(10)
+            spaceState,path=AStarNoOb(listStart,end)
+            timeTaken=timeit.timeit(lambda:AStarNoOb(listStart,end),number=5)
+            save_result_to_file("KetQua.txt",algorithm,timeTaken,path,spaceState)
+        elif algorithm=="SeePartOfMatrix":
+            partial_state = [
+                [2, '?', '?'],
+                ['?', 8, '?'],
+                ['?', '?', 1]
+            ]
+            goal_state = [
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 0]
+            ]
+            path,runtime,spaceState=SeePartOfMatrix(partial_state,goal_state)
+            save_result_to_file("KetQua.txt",algorithm,runtime,path,spaceState)
+        elif algorithm=="CSPBacktracking":
+            startTime=time.time()
+            spaceState,path=CSPBackTracking()
+            endTime=time.time()
+            save_result_to_file("KetQua.txt",algorithm,endTime-startTime,path,spaceState)
+            del startTime
+            del endTime
+        elif algorithm=="QLearning":
+            startTime=time.time()
+            QLearning(start)
+            spaceState,path=solve_QLearning(start)
+            endTime=time.time()
+            save_result_to_file("KetQua.txt",algorithm,endTime-startTime,path,spaceState)
+            del startTime
+            del endTime
         else:
             print("Ko dung")
             return
@@ -121,7 +167,7 @@ def runPuzzle(start, steps, path,WHITE,BLACK,WidthBoard, HeightBoard,squareSize,
     global position, prePosition, nextPosition
 
     screenBoard = pygame.display.set_mode((WidthBoard, HeightBoard))
-    FPS = 60
+    FPS = 120
     animating=False
     index = 0          
     currentStep=0
@@ -139,7 +185,6 @@ def runPuzzle(start, steps, path,WHITE,BLACK,WidthBoard, HeightBoard,squareSize,
     }
 
     try:
-        
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -198,14 +243,18 @@ def save_result_to_file(filename, algorithm, time, path,spaceState):
         file.write(f"Thuật toán: {algorithm}\n")
         file.write(f"Thời gian chạy: {time:.6f} giây\n")
         file.write(f"Số trạng thái duyệt: {spaceState}\n")
-        file.write(f"Số trạng thái đường đi: {len(path)}\n")
-        file.write("Đường đi:\n")
-        
-        for i, step in enumerate(path):
-            file.write(f"\nBước {i + 1}:\n")
-            step_matrix = np.array(step).reshape(3, 3)  # Đảm bảo mỗi bước là ma trận 3x3
-            for row in step_matrix:
-                file.write(" ".join(map(str, row)) + "\n")
+        if path!=None:
+            file.write(f"Số trạng thái đường đi: {len(path)}\n")
+            file.write("Đường đi:\n")
+            
+            for i, step in enumerate(path):
+                file.write(f"\nBước {i + 1}:\n")
+                step_matrix = np.array(step).reshape(3, 3)  # Đảm bảo mỗi bước là ma trận 3x3
+                # print_board(step)
+                for row in step_matrix:
+                    file.write(" ".join(map(str, row)) + "\n")
+        else:
+            file.write("Không tìm thấy đường đi.\n")
                     
 if __name__ =="__main__":
     start=np.array([
